@@ -30,101 +30,73 @@ Models were built using k-fold cross-validation with a factor of five first with
 
 ## Features
 Feature selection was done by first using recursive feature elimination to reduce the number of features and then modified using domain knowledge. A few different numbers were tried for how many variables should be selected using recursive feature elimination (RFE) but ultimately the best number of variables when combined with model building was about twenty (Figure 1). Recursive feature elimination was performed using linear regression as the estimator for computational efficiency. The drawback to linear regression is that it is possible that a variable that does not have a linear relationship is important to the determination of the target variable and may be left out. This is why domain knowledge will be used to add features that are relevant to the task at hand. 	
-Units reimbursed, number of prescriptions, state name, quarter average NADAC per unit, NDC package code, proprietary name, pharmacological class allergens, pharmacological class anti-inflammatory agents, pharmacological class cell-mediated immunity, pharmacological class cyclooxygenase inhibitors, pharmacological class histamine H1 receptor agonists, pharmacological class non-steroidal, pharmacological class osmotic activity, pharmacological class osmotic laxative, dosage form injection, dosage form liquid, dosage form lozenge, dosage form patch, dosage form solution, dosage form spray.
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%201.png) 
+
 Figure 1: Features Selected Using Recursive Feature Elimination for Twenty Variables
+
 Initial investigation of the features selected using RFE indicated that the pharmacological class does not have a large impact on the total amount reimbursed and that majority of the dosage forms do not either. Economic factors were not selected using RFE likely because they are time based and four years’ worth of data may not be enough time to see their true impact on the total amount reimbursed. However, it is expected that as the economy changes and legislation changes the economic variables will have an impact on the total amount reimbursed for Medicaid drugs. 
 The selected features were the same for all models (Figure 2). The state name is important because the states have control over certain aspects of the Medicaid program which can impact the drug spending and reimbursement in the state. The national average drug acquisition cost (NADAC) is the average price per unit of a drug based on retail pharmacy rates which are reported to CMS. This information is important because NADAC rates are the basis for Medicaid reimbursement rates making this feature relevant to the project. The NDC package code and proprietary name both lend identifying characteristics regarding the drug such as name, package size, and manufacturer. The quarter provides the time frame the record is from. The four dosage forms used in the model are representative of the form the drug is in. Any record that does not have one of these dosage forms as a flag is considered an ‘other’ dosage form. These four dosage forms make sense because tablet, powder, and capsule are likely all taken orally meaning they would be common drugs to be taken by the general population. The injection can capture drugs for diabetes, hormonal treatment, and blood thinners which may be used to treat chronic disease which may be prevalent in the Medicaid population.
-Feature Name	Definition
-Units Reimbursed	Units reimbursed for the drug by the federal government.
-Number of Prescriptions	Number of prescriptions filled for the drug.
-State Name	The name of the state the record belongs to.
-Average NADAC Price Per Unit	National average price per unit of the drug from survey of retail pharmacies around the nation at the quarter level.
-NDC Code	The unique identifier for the specific chemical, manufacture, and package size of the drug product. A single proprietary drug could have multiple NDC codes if multiple manufacturers produce it or if the drug has multiple package sizes.
-Proprietary Drug Name	The brand name of the drug.
-Quarter	The quarter the record is for in ‘yyyyqq’ format.
-Dosage Form Tablet	Flagged if the drug is a tablet.
-Dosage Form Powder	Flagged if the drug is a powder.
-Dosage Form Injection	Flagged if the drug is given by injection.
-Dosage Form Capsule	Flagged if the drug is a capsule.
-GDP in Billions	Gross domestic product for the nation for the quarter.
-Unemployment Rate	Unemployment percentage for the state the record belongs to for the quarter. This is the number of people not working over the number of people eligible in the state to work.
-Poverty Percent, All Ages	Percentage of the state’s population living below the poverty line for the quarter.
-Median Household Income	The median income for the state by household. 
-CPI	Consumer price index for the nation for the quarter specified by the record.
-Count Enrolled	The average number of Medicaid beneficiaries per month for the specified state and quarter multiplied by three to get average Medicaid beneficiaries by quarter.
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%202.png)
+
 Figure 2: Features Selected for Model Building
+
 GDP in billions captures the gross domestic product of the country reflecting the economic health of the economy while consumer price index (CPI) captures the consumer confidence in the economy. The unemployment rate, poverty percent, and median household income are all state level variables that provide insight into the state’s individual economy. The unemployment rate indicates how many people who are eligible to work are not working while poverty percent provides information on the percentage of the population of the state lives below the poverty line. Median household income provides information on the income level in the state. These economic factors are important because Medicaid eligibility is assessed based on income and assets so higher unemployment rates and poverty percentages will impact the number of Medicaid beneficiaries in the state which will contribute prescription drug use. The count of Medicaid beneficiary months is the sum of Medicaid members per month for the quarter. This is important since it provides information around trends in the Medicaid space. More Medicaid members likely indicates more prescriptions and higher reimbursement costs so therefore number of Medicaid members is an important feature for this project.
 Of the features selected not all of them have a high correlation with the target variable, total amount reimbursed (Appendix D). The ones who do not have a strong correlation may still have a relationship with the variable it just may be nonlinear. Units reimbursed and number of prescriptions have the highest correlation followed by NDC package code, and state name.
+
 ## Results
 Over the course of 2018-2022 there was a general increase in total amount of dollars the federal government reimbursed the states for regarding prescription drugs (Figure 3). There is a larger increase between the second quarter of 2020 and the third quarter of 2020 which coincides with the COVID 19 pandemic. While there is a slight decrease in the fourth quarter of 2022, the time series indicates that the federal government has been reimbursing more money as the years go on for Medicaid drug products. Over time the number of Medicaid beneficiaries has been increasing, this is in line with the rise in all the previously explored time variables and indicates that the number of Medicaid beneficiaries may have an impact on total amount reimbursed (Figure 4).
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%203.png)
  
 Figure 3: Total Amount of Medicaid Dollars Reimbursed to the States Over Time
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%204.png)
  
 Figure 4: Total Count of Medicaid Beneficiaries Enrolled Over Time
+
 Over time the total number of prescriptions filled, and the total units reimbursed by the federal government both increase at a steady rate (Figures 5 and 6). The upward trends with slight dips between Q2 2022 and Q3 2022 are similar to the total amount reimbursed over time trendline. This makes sense with total amount reimbursed because it would be logical for a higher number of prescriptions filled to lead to higher reimbursement dollars, and a higher number of units reimbursed to also lead to higher total dollars reimbursed. The catch regarding number of prescriptions filled is that just because a drug is filled does not necessarily mean that it will be reimbursed by the federal government. Additionally, units reimbursed for high-use or high-cost drugs may have an impact on the total amount reimbursed skewing the relationship. Due to this regression models were built to attempt to capture the relationships between other variables with units reimbursed and number of prescriptions filled to get the full picture of what is contributing to Medicaid drug prices.
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%205.png)
  
 Figure 5: Number of Medicaid Prescriptions Filled Over Time
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%206.png)
  
 Figure 6: Number of Units Reimbursed for Medicaid Drugs Over Time
 
 
 ## Results of Regression Models
 Overall, the linear models performed poorly. None of the models exceeded an R-squared value of greater that 63.6% (Figure 7). The driving features of all linear models were primarily units reimbursed, NDC package code, and number of prescriptions (Appendices E through H). This is logical because as number of prescriptions filled for a drug goes up it is expected that the amount reimbursed to the state by the federal government would also increase. This would capture the relationship between drug use and drug cost meaning high-utilization drugs will have a higher amount reimbursed when compared to a low-use drug. NDC package code indicates which drug is being used and the size of the package the drug is in which also makes it a logical indicator for a linear relationship since a larger package size would be expected to have a larger reimbursement.
-Model	Mean Squared Error	R-Squared
-Linear Regression	3931403.97	63.8%
-Ridge Regression	3931403.93	63.8%
-RANSAC Regression	4176611.44	61.5%
-Huber Regression	422677.11	61.0%
-Decision Tree Regression	2490110.43	77.0%
-Random Forest Regression	1272631.63	89.1%
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%207.png)
+
 Figure 7: Results of All Regression Models
+
 The linear models that perform the best are the general linear regression and ridge regression. Huber regression and RANSAC regression both have lower R-squared values. However, these models are likely more indicative of what is happening in the dataset and are probably more generalizable due to their resistance to outliers. Of the linear models the Huber regression model is the preferred model due to its ability to capture the influence of outliers. The outliers in the Medicaid drug dataset are important because they capture the information surrounding high-utilization drugs and/or high-cost drugs that may be considered outliers in the dataset. The Huber model has an R-squared value of 61.0% meaning that the features explain 61.0% of the variability in the data and a mean-squared error of 422,677.11. Units reimbursed and number of prescriptions are expectedly the main drivers of this model due to their correlation with total amount reimbursed (Figures 8 and 9). State name also had a substantial positive impact likely due to the variations in population size and what Medicaid covers in each state. Surprisingly dosage form of injection has a negative impact indicating that records that are for drugs that are administered via injection have fewer dollars reimbursed when the linear model is referenced. Economic factors have some impact and are included to capture any variations. Due to the dataset being limited to four years of data there could very well be an important relationship and more years need to be included to determine the full impact of economic factors.
-Coefficients for model: Huber Regression
-Feature 1: units_reimbursed: 673.1768771551644
-Feature 2: number_of_prescriptions: 1025.6372761767932
-Feature 3: State Name: 613.4087248946981
-Feature 4: quarteravg_nadac_per_unit: 316.88561589986625
-Feature 5: ndcpackagecode: 739.4000520110825
-Feature 6: proprietaryname: 173.02417401999156
-Feature 7: year_quarter_encoded: 106.9347442979051
-Feature 8: dosageformname_TABLET: 59.220535637635344
-Feature 9: GDP in billions: -176.55495579927373
-Feature 10: unemp_rate: -43.310853220999746
-Feature 11: poverty percent, all ages: 3.748097584969089
-Feature 12: dosageformname_POWDER: -8.763781946162007
-Feature 13: median household income: -54.80497785338656
-Feature 14: CPI: 74.67574833415532
-Feature 15: dosageformname_INJECTION: -1192.49050861582
-Feature 16: dosageformname_CAPSULE: 152.30132888930441
-Feature 17: CountEnrolled: -76.90392817581557
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%208.png)
+
 Figure 8: Coefficients of the Variables for the Huber Regression Model
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%209.png)
  
 Figure 9: Visualization of Coefficients for the Huber Regression Model
+
 The nonlinear models perform much better than the linear models when comparing mean squared error and R-squared on all feature subsets that were used (Figure 7). Random forest regression performed better than decision tree likely due to being an ensemble method and taking the best of the best when building multiple trees. The feature importance for the decision trees is nearly identical to the random forest regression models (Appendix I and Figure 10). This is likely because random forest is essentially a bunch of decision trees. The random forest regression model had an R-squared value of 89.1% meaning the model explains 89.1% of the variability in the total amount reimbursed and the mean squared error was 1272631.63 (Figure 7).
 
-Feature Importance: Random Forest Regression
-Feature 1: units_reimbursed: 0.1906
-Feature 2: number_of_prescriptions: 0.3917
-Feature 4: State Name: 0.0366
-Feature 10: quarteravg_nadac_per_unit: 0.2387
-Feature 11: ndcpackagecode: 0.0391
-Feature 12: proprietaryname: 0.0216
-Feature 75: year_quarter_encoded: 0.0048
-Feature 71: dosageformname_TABLET: 0.0024
-Feature 16: GDP in billions: 0.0044
-Feature 5: unemp_rate: 0.0112
-Feature 8: poverty percent, all ages: 0.0117
-Feature 67: dosageformname_POWDER: 0.0017
-Feature 9: median household income: 0.0108
-Feature 15: CPI: 0.0046
-Feature 60: dosageformname_INJECTION: 0.0002
-Feature 55: dosageformname_CAPSULE: 0.0021
-Feature 6: CountEnrolled: 0.0281
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%2010.png)
+
 Figure 10: Feature Importance Random Forest Regression
+
 The number of prescriptions is the most important feature for both models followed by quarter average NADAC per unit (Figure 11). The quarter average NADAC per unit is much more influential on the nonlinear models than in the linear models. This indicates that there is a nonlinear relationship between NADAC per unit that is important. This is because NADAC per unit has much smaller values that represent a single unit and therefore will not go up linearly when the total amount reimbursed goes up but will have an impact on total amount reimbursed when considered in conjunction with units reimbursed. The NADAC per unit generally is used as a baseline for Medicaid drug reimbursement as most states take NADAC into account for ingredient cost. The dosage forms are less important in the model however when they were removed there was a drop in accuracy. While increased accuracy does not necessarily mean the model is better the dosage forms were elected to be left in because they provide information about how common a drug may be. The oral forms such as tablet, capsule, and powder are easy to take and therefore highly prescribed and injections are used for common chronic diseases like diabetes. The economic factors are not as important as originally suspected but this could be due to only four years’ worth of data being included in the model building process. It is possible as time goes on and more data is available that the economic factors and the year/quarter combination will show increased importance.
+
+![](https://github.com/chelseaheimiller/Regression-Models-Indentifying-Driving-Factors-of-Medicaid-Drug-Reimbursement-Costs/blob/main/Images/Figure%2011.png)
  
 Figure 11: Random Forest Regression Feature Importance Visualization
-Discussion
+
+## Discussion
 The model of choice for Medicaid drug price spending is the random forest regression model and the results of its feature importance can be used to determine the driving factors of Medicaid drug prices. This model is preferred for a couple of reasons. It has the best mean squared error and R-squared scoring. However, this alone is not a reason to pick this model. The random forest regression model has been chosen over decision tree model because the random forest regression is made up of multiple decision trees making random forest regression more resilient to overfitting. This is advantageous because the model is likely more generalizable to data it has not seen before. Random forest models also are not influenced by outliers due to the partitioning of the data so the important relationships for high-use and high-cost drugs can be captured without skewing the whole model as a linear model would. The random forest model is also able to capture relationships between variables that the linear models cannot. For example, random forest regression identified the relationship between NADAC per unit and total amount reimbursed which was not captured in any of the linear models. Due to this, the random forest regression model should be used to determine what variables are most important in driving Medicaid drug reimbursement.
 The random forest regression model highlights a few variables that are the most important in driving the cost of Medicaid drug reimbursements. The most important factors are units reimbursed and number of prescriptions filled. While this may seem obvious it is important to note that just because a prescription is filled does not necessarily mean that it will be reimbursed, and the Medicaid beneficiary may have to pay out of pocket for some drugs. NADAC price per unit is also a driving factor and is an option for intervention. This was not a relationship that was captured in the linear models however it provides an important piece of information about what drives drug reimbursement dollars. Now that the federal government can negotiate drug costs, it is possible that price per unit will decline, and Medicaid drug reimbursement dollars will decrease. Negotiating the prices of high use and high-cost drugs is an area for savings that should be considered. The driving factors should be re-evaluated in a few years to determine if the NADAC is still relevant for this task due to this change in legislation. Looking into ways to incentivize providers to encourage lifestyle change could impact the number of prescriptions being filled by reducing chronic disease and the need for medication. Programs such as the Merit-Based Incentive Payment System (MIPS) could have measures developed to encourage providers to promote lifestyle change. While MIPS is a Medicare program, encouraging a MIPS measure will cascade to the entire population that the provider serves. The time and economic variables were not as impactful as originally thought but that is a pattern that may still be hidden and show itself as time goes on and more years can be added to the dataset.
  There are several areas for potential improvement in the model. Namely, drug class was available but not able to be used as the classes were broad and not specific to a diagnosis. A single pharmacological class can be applied to drugs that treat multiple different diseases and drug class does not indicate what the drug is used to treat. Adding flags for common diseases or a flag that indicates that a drug is commonly used to treat a chronic disease can provide relevant information. This is knowledge that is outside the scope of this writer and is not easily available online. A consulting pharmacist will need to be brought on board to ensure the proper knowledge is available. Another piece of information that could be assessed is Medicaid beneficiaries with chronic diagnoses. This information was not a part of the scope of this project but investigating chronic disease presence in the Medicaid population and implementing interventions to reduce chronic disease and preventing the need for medication thus reducing the cost is an area for improvement. Since the most influential factor for total reimbursement is number of prescriptions filled finding ways to reduce utilization will have the highest impact on costs.
@@ -132,7 +104,7 @@ Since the dataset used to build this model had any record with a null value drop
 There are a variety of factors that influence total Medicaid dollars reimbursed to the states by the federal government. The random forest regression model provides the most information about the relationship between the selected variables and total amount reimbursed by explaining 89.1% of the variability. The most influential is number of prescriptions and units reimbursed followed by the cost of the drug per unit which can be negotiated by the federal government directly with the pharmaceutical companies. It is important to highlight that this process was done without expert knowledge regarding prescription drugs and therefore important features may have been missed that a pharmacist would be able to identify. To work on improving the model a pharmacist should be consulted with to ensure the appropriate information about what a drug is used to treat can be considered to determine if there is a relationship between common/chronic diseases and what Medicaid drug reimbursement. The random forest regression model could benefit from further work, but it is a good starting point for determining what drives Medicaid drug spending and explaining much of what is happening with drug spending. However, due to about 11% of the variability in total drug reimbursement not being explained it is not recommended that this model be used to forecast Medicaid drug spending at this time. The previously made recommendations should be considered and more years of data should be added to determine if the time-based variables are more important than the current model would suggest. It is possible that with these changes that the model would be able to be used to forecast total amount reimbursed to the state by the federal government.
 
 
-References
+## References
 AIML.com. (2023, October 3). What are the advantages and disadvantages of Decision Tree Model? . AIML.com Machine Learning Resources. https://aiml.com/what-are-the-advantages-and-disadvantages-of-using-a-decision-tree/ 
 AIML.com. (2023, October 3). What are the advantages and disadvantages of Random Forest?. AIML.com Machine Learning Resources. https://aiml.com/what-are-the-advantages-and-disadvantages-of-random-forest/ 
 Anderson, L. A. (2023, November 21). National Drug Codes explained: What you need to know. National Drug Codes Explained. https://www.drugs.com/ndc.html
