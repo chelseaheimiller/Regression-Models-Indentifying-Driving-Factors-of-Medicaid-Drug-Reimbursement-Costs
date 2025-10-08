@@ -1,5 +1,10 @@
 # Regression Models for Predicting Medicaid Drug Reimbursement
 
+## Executive Summary
+&nbsp;&nbsp;&nbsp;&nbsp;Using various datasets publically available a dataset was assmebled with Medicaid drug information for the years of 2018-2022, National Average Drug Acquisition Cost data, and economic data by quarter. After building mulitple regression models and determining the most appropriate model for the data available I identified which factors may be driving Medicaid drug costs and made reccomendations for future research namely consulting with a pharmacist to get expert input.
+
+## Introduction
+
 &nbsp;&nbsp;&nbsp;&nbsp;Prescription drugs are a major expense for many Americans and rising prescription drug prices are a concern for both the state and federal government as well as consumers. For the Medicaid program, net spending on prescription drugs increased 47% from 2017 to 2022 from $29.8 billion to $43.8 billion (Smith, 2023). This is potentially due to a variety of factors including but not limited to number of Medicaid beneficiaries, number of prescriptions, drug class, and economic factors. The goal of this project was to determine what impacts Medicaid drug price based on various factors obtained from multiple governmental sources. Understanding what drives Medicaid drug prices will allow policies and interventions to be implemented to reduce drug costs. It can also allow states to plan their Medicaid budgets based on how much they will be reimbursed by the federal government for drugs and the federal government can plan their budgets for Medicaid drug spending. 
   
 ## Background
