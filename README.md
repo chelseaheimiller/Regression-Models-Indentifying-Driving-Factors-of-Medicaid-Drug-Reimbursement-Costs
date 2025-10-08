@@ -1,7 +1,7 @@
 # Regression Models for Predicting Medicaid Drug Reimbursement
 
 ## Executive Summary
-&nbsp;&nbsp;&nbsp;&nbsp;Using various datasets publically available a dataset was assmebled with Medicaid drug information for the years of 2018-2022, National Average Drug Acquisition Cost data, and economic data by quarter. After building mulitple regression models and determining the most appropriate model for the data available I identified which factors may be driving Medicaid drug costs and made reccomendations for future research namely consulting with a pharmacist to get expert input.
+&nbsp;&nbsp;&nbsp;&nbsp;Using various datasets publically available a dataset was assembled with Medicaid drug information for the years of 2018-2022, National Average Drug Acquisition Cost data, and economic data by quarter. After building mulitple regression models and determining the most appropriate model for the data available I identified which factors may be driving Medicaid drug costs and made reccomendations for future research namely consulting with a pharmacist to get expert input.
 
 ## Introduction
 
